@@ -526,6 +526,9 @@ In this exercise, you will create a release pipeline in Azure DevOps that perfor
 20. Select the 'Azure Resource Group Deployment' task and configure the paths of template and parameter file as highlighted.
 ![On the screen, configure task as highlighted.](images/stepbystep/media/imagee2.png "Configure Azure Resource Group Deployment Task")
 
+21. Configure the variables for different environments. 
+![On the screen, configure variables as highlighted.](images/stepbystep/media/imagee3.png "Configure variables")
+
 21. Let's wrap up this activity by giving our release pipeline a new name. Click on the existing "New release pipeline" name to begin editing it. Change the name to "TailspinToys Release".
 
     ![On the screen, TailspinToys Release name is highlighted.](images/stepbystep/media/image92a.png "Release pipeline name change")
