@@ -520,13 +520,19 @@ In this exercise, you will create a release pipeline in Azure DevOps that perfor
 
     ![On the panel, App Service name, Resource group, and Source Slot are all highlighted.](images/stepbystep/media/image92.png "Swap Slots task configuration")
 
-19. Let's wrap up this activity by giving our release pipeline a new name. Click on the existing "New release pipeline" name to begin editing it. Change the name to "TailspinToys Release".
+19. Click on 'Add a task'. Search for 'Azure Resource Group Deployment' task. Click on 'Add' button.
+![On the screen, task is highlighted.](images/stepbystep/media/imagee1.png "Add Azure Resource Group Deployment Task")
+
+20. Select the 'Azure Resource Group Deployment' task and configure the paths of template and parameter file as highlighted.
+![On the screen, configure task as highlighted.](images/stepbystep/media/imagee2.png "Configure Azure Resource Group Deployment Task")
+
+21. Let's wrap up this activity by giving our release pipeline a new name. Click on the existing "New release pipeline" name to begin editing it. Change the name to "TailspinToys Release".
 
     ![On the screen, TailspinToys Release name is highlighted.](images/stepbystep/media/image92a.png "Release pipeline name change")
 
-20. Click the "Save" button at the top of the screen and confirm by clicking the "OK" button.
+22. Click the "Save" button at the top of the screen and confirm by clicking the "OK" button.
 
-21. Congratulations! You have just created your first release pipeline.
+23. Congratulations! You have just created your first release pipeline.
 
 ### Task 2: Add test and production environments to release pipeline
 
