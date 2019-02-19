@@ -88,7 +88,75 @@ Tailspin Toys has asked you to automate their development process in two specifi
 
     -   Git command-line interface (CLI)
 
-## Exercise 1: Create an Azure Resource Manager (ARM) template that can provision the web application, SQL database, and deployment slots in a single automated process
+## Exercise 1: Create Azure DevOps project and Git Repository
+
+Duration: 15 Minutes
+
+In this exercise, you will create and configure an Azure DevOps account along with an Agile project.
+
+### Task 1: Create Azure DevOps Account
+
+1.  Browse to the Azure DevOps site at <https://dev.azure.com>.
+
+2.  If you do not already have an account, click the **Start free** button.
+    
+    ![In this screenshot, a Start free button is shown on the Azure DevOps home page.](images/stepbystep/media/image56.png "Azure DevOps screenshot")
+
+3.  Authenticate with a Microsoft account.
+
+4.  Click **Continue** to accept the Terms of Service, Privacy Statement, and Code of Conduct.
+
+5.  Choose a name for new your project. For the purposes of this scenario, we will use "TailspinToys". Choose **Private** in the Visibility section so that our project is only visible to those who we specifically grant access. Then, click **+ Create project**.
+    
+    ![In the Create a project to get started window, TailspinToys is highlighted in the Project name box, Private is highlighted in the Visibility box, and Create project is highlighted at the bottom.](images/stepbystep/media/image57.png "Create a project window")
+
+6.  Once the Project is created, click on the **Repos** menu option in the left-hand navigation.
+
+    ![In the TailspinToys project window, Repos is highlighted in the left-hand navigation.](images/stepbystep/media/image58.png "TailspinToys navigation window")
+
+7.  On the **Repos** page for the **TailspinToys** repository, locate the "or push an existing repository from command line" section. Click the Copy button to copy the contents of the panel. We're going to use these commands in an upcoming step.
+
+    
+    ![In the "Add some code!" window, URLs appear to clone to your computer or push an existing repository from command line.](images/stepbystep/media/image59.png "TailspinToys is empty. Add some code! window")
+
+### Task 2: Add the Tailspin Toys source code repository to Azure DevOps
+
+In this Task, you will configure the Azure DevOps Git repository. You will configure the remote repository using Git and then push the source code up to Azure DevOps through the command line tools.
+
+1.  Open a command prompt in the **C:\\Hackathon** folder.
+
+    > **Note**: If this folder doesn't exist ensure you followed the instructions in the Before the HOL.
+
+2.  Initialize a local Git repository by running the following command at the command prompt:
+
+    > If a ".git" folder and local repository already exists in the folder, then you will need to delete the ".git" folder first before running the commands below to initialize the Git repository.
+
+    ```
+    git init
+    ```
+
+3.  Paste the first command you copied from Azure DevOps. It will resemble the command below:
+    
+    ```
+    git remote add origin https://<your-org>@dev.azure.com/<your-org>/TailspinToys/_git/TailspinToys
+    ```
+
+4.  Enter the following commands to commit the changes made locally to the new repository:
+    
+    ```
+    git add *
+    git commit -m "adding files"
+    ```
+
+5.  Push the changes up to the Azure DevOps repository with the following command:
+
+    ```
+    git push -u origin --all
+    ```
+
+6.  Leave that command prompt window open and switch back to the web browser window for Azure DevOps from the previous Task. Navigate to the Repos > Files page which shows the files in the repository. You may need to refresh the page to see the updated files. Your source code is now appearing in Azure DevOps.
+
+## Exercise 2: Create an Azure Resource Manager (ARM) template that can provision the web application, SQL database, and deployment slots in a single automated process
 
 Duration: 45 Minutes
 
@@ -110,9 +178,23 @@ Tailspin Toys has requested three Azure environments (dev, test, production), ea
 
 Since this solution is based on Azure Platform-as-a-Service (PaaS) technology, it should take advantage of that platform by utilizing automatic scale for the web app and the SQL Database PaaS service instead of SQL Server virtual machines.
 
+
+### Prerequiste: Download the exercise files
+
+1.  Download the exercise files for the training (from within the virtual machine).
+
+    -   Create a new folder on your computer named **C:\\Hackathon**.
+
+    -   Download the support files (.zip format), https://cloudworkshop.blob.core.windows.net/agile-continous-delivery/Agile-Continuous-Delivery-Student%20Files-6-2017.zip to the new folder.
+
+    -   Extract the contents to the **C:\\Hackathon** folder.
+
+**Tip:** In the labs, when adding resources to the Azure Resource Manager template, ensure there are no spaces at the end of the resource names. Visual Studio will include the space in all of the code it generates.
+
+
 ### Task 1: Create an Azure Resource Manager (ARM) template using Visual Studio
 
-1.  Open Visual Studio and create a new project of the type Cloud -- Azure Resource Group. Name the new project "TailspinToys.AzureResourceTemplate" and save it to **C:\\Hackathon**. Also, make sure that only the "Create directory for solution" option is checked on the lower right, as in the screen shot below. When finished, click **OK**.
+1.  Open Visual Studio and open a previous solution and then add new project of the type Cloud -- Azure Resource Group. Name the new project "TailspinToys.AzureResourceTemplate" and save it to **C:\\Hackathon**. Also, make sure that only the "Create directory for solution" option is checked on the lower right, as in the screen shot below. When finished, click **OK**.
     
     ![In this screenshot of the New Project dialog box, all the options to create the TailspinToys.AzureResourceTemplate project are highlighted.](images/stepbystep/media/image22.png "Visual Studio New Project dialog box")
 
@@ -258,181 +340,6 @@ Since this solution is based on Azure Platform-as-a-Service (PaaS) technology, i
 
     ![This is a screenshot of the code pasted just below the element for the application insights extension in the "resources" array.](images/stepbystep/media/image39.png "Pasted block of JSON code")
 
-### Task 9: Create the dev environment and deploy the template to Azure
-
-1.  First, before you deploy the template, you need to make sure that you can get the instrumentation key from the Application Insights resource because you will need it later. To do this, you can add an output property to the template. Go the "outputs" area of the template and paste or type in this JSON code.
-
-    ```
-        "MyAppInsightsInstrumentationKey": {
-            "value": "[reference(resourceId('Microsoft.Insights/components', 'TailspinToysWeb'), '2014-04-01').InstrumentationKey]",
-            "type": "string"
-            }
-    ```
-2.  Now, save all your files.
-
-3.  Right-click the project in Solution Explorer and choose "Deploy" and then "New..."
-
-    ![In Solution Explorer, TailspinToysAzureResourceTemplate is selected, a submenu has New selected and highlighted, and another submenu has Deploy highlighted.](images/stepbystep/media/image40.png "Choosing New and Deploy")
-
-4.  Sign in to your Azure account if necessary, and then choose your correct subscription. Under Resource group, choose "Create New..." and create a new resource group for this deployment. Since we are creating a dev environment, let us name it "TailspinToys-dev." Choose a location near you.
-  
-    ![In the Deploy to Resource Group window, Create New is selected in the Resource group drop-down list.](images/stepbystep/media/image41.png "Deploy to Resource Group window")
-    
-    ![In the Create Resource Group window, Tailspintoys-dev is highlighted in the Resource group name box, and Create is highlighted at the bottom.](images/stepbystep/media/image42.png "Create Resource Group window")
-
-5.  Once you have the resource group created, click the **Edit Parameters** button.
-
-    ![In the Deploy to Resource Group window, the resource group has been created, and the Edit Parameters button is highlighted.](images/stepbystep/media/image43.png "Deploy to Resource Group window")
-
-6.  In the next window, select "dev" from the list of environments. Then, pick an admin username, and password for the database, it does not matter what you choose. Then use "TailspinData" for the TailspinDataName value. Call the hosting plan "TailspinHostingPlan1" and choose "S1" for the Sku. Finally, be sure to check the "Save passwords..." option at the bottom See this screen shot for help. When finished, click Save.
-    
-    ![In the Edit Parameters window, the dev value is highlighted along with the values for the admin username and the database password. The TailspinData, TailspinHostingPlan1, and S1 values are also highlighted, and the Save passwords as plain text in the parameters file check box is selected.](images/stepbystep/media/image44.png "Edit Parameters window")
-
-7.  Then, click the **Deploy** button on the deployment window.
-    
-    ![In the Deploy to Resource Group window, Deploy is highlighted at the bottom.](images/stepbystep/media/image45.png "Deploy to Resource Group window")
-
-8.  If we have done everything correct, the deployment will begin. You can watch the output window inside Visual Studio to follow along. This deployment typically takes a few minutes. Upon completion, you should see success and you should see an instrumentation key be written out in the output window. Copy this down for a future step in this process. 
-
->**Note:** Your key will be different from the one shown in this screen shot.
-    
-   ![This is a screenshot of a highlighted instrumentation key in the output window.](images/stepbystep/media/image46.png "instrumentation key")
-
-### Task 10: Create the test environment and deploy the template to Azure
-
-The following steps are very similar to what was done in the previous task with the exception that you are now creating the test environment
-
-1.  Right-click the project in Solution Explorer and choose "Deploy" and then "New..."
-
-    ![In Solution Explorer, TailspinToysAzureResourceTemplate is selected, a submenu has New selected and highlighted, and another submenu has Deploy highlighted.](images/stepbystep/media/image40.png "Choosing New and Deploy")
-
-2.  Sign in to your Azure account if necessary, and then choose your correct subscription. Under Resource group, choose "Create New..." and create a new resource group for this deployment. Since we are creating a test environment, let us name it "TailspinToys-test." Choose a location near you.
-
-    ![In the Deploy to Resource Group window, Create New is selected in the Resource group drop-down list.](images/stepbystep/media/image41.png "Deploy to Resource Group window")
-    
-    ![In the Create Resource Group window, Tailspintoys-test is in the Resource group name box, and South Central US is in the Resource group location box.](images/stepbystep/media/image47.png "Create Resource Group window")
-
-3.  Once you have the resource group created, click the **Edit Parameters** button.
-
-    ![In the Deploy to Resource Group window, the resource group has been created, and the Edit Parameters button is highlighted.](images/stepbystep/media/image48.png "Deploy to Resource Group window")
-
-4.  In the next window, select "test" from the list of environments. Then, pick an admin username, and password for the database, it does not matter what you choose. Then use "TailspinData" for the TailspinDataName value. Call the hosting plan "TailspinHostingPlan1" and choose "S1" for the Sku. Finally, be sure to check the "Save passwords..." option at the bottom See this screen shot for help. When finished, click Save.
-
-    ![In the Edit Parameters window, the test value is highlighted along with the values for the admin username and the database password. The TailspinData, TailspinHostingPlan1, and S1 values are also highlighted, and the Save passwords as plain text in the parameters file check box is selected.](images/stepbystep/media/image49.png "Edit Parameters window")
-
-5.  Then, click the **Deploy** button on the deployment window.
-
-    ![In the Deploy to Resource Group window, Deploy is highlighted at the bottom.](images/stepbystep/media/image50.png "Deploy to Resource Group window")
-
-6.  If we have done everything correct, the deployment will begin. You can watch the output window inside Visual Studio to follow along. This deployment typically takes a few minutes. Upon completion, you should see success and you should see an instrumentation key be written out in the output window. Copy this down for a future step in this process. 
-
->**Note:** Your key will be different from the one shown in this screen shot.
-
-   ![This is a screenshot of a highlighted instrumentation key in the output window.](images/stepbystep/media/image46.png "Instrumentation key")
-
-### Task 11: Create the production environment and deploy the template to Azure
-
-The following steps are very similar to what was done in the previous task with the exception that you are now creating the production environment.
-
-1.  Right-click the project in Solution Explorer and choose "Deploy" and then "New..."
-
-    ![In Solution Explorer, TailspinToysAzureResourceTemplate is selected, a submenu has New selected and highlighted, and another submenu has Deploy highlighted.](images/stepbystep/media/image40.png "Choosing New and Deploy")
-
-2.  Sign in to your Azure account if necessary, and then choose your correct subscription. Under Resource group, choose "Create New..." and create a new resource group for this deployment. Since we are creating a production environment, let us name it "TailspinToys-prod." Choose a location near you.
-
-    ![In the Deploy to Resource Group window, Create New is selected in the Resource group drop-down list.](images/stepbystep/media/image41.png "Deploy to Resource Group window")
-    
-    ![In the Create Resource Group window, TailspinToys-production is in the Resource group name box, and South Central US is in the Resource group location box.](images/stepbystep/media/image51.png "Create Resource Group window")
-
-3.  Once you have the resource group created, click the **Edit Parameters** button.
-
-    ![In the Deploy to Resource Group window, the resource group has been created, and the Edit Parameters button is highlighted.](images/stepbystep/media/image52.png "Deploy to Resource Group window")
-
-4.  In the next window, select "production" from the list of environments. Then, pick an admin username, and password for the database, it does not matter what you choose. Then use "TailspinData" for the TailspinDataName value. Call the hosting plan "TailspinHostingPlan1" and choose "S1" for the Sku. Finally, be sure to check the "Save passwords..." option at the bottom See this screen shot for help. When finished, click Save.
-
-    ![In the Edit Parameters window, the production value is highlighted along with the values for the admin username and the database password. The TailspinData, TailspinHostingPlan1, and S1 values are also highlighted, and the Save passwords as plain text in the parameters file check box is selected.](images/stepbystep/media/image53.png "Edit Parameters window")
-
-5.  Then, click the **Deploy** button on the deployment window.
-    
-    ![In the Deploy to Resource Group window, Deploy is highlighted at the bottom.](images/stepbystep/media/image54.png "Deploy to Resource Group window")
-
-6.  If we have done everything correct, the deployment will begin. You can watch the output window inside Visual Studio to follow along. This deployment typically takes a few minutes. Upon completion, you should see success and you should see an instrumentation key be written out in the output window. Copy this down for a future step in this process. 
-
->**Note:** Your key will be different from the one shown in this screen shot.
-    
-   ![This is a screenshot of a highlighted instrumentation key in the output window.](images/stepbystep/media/image46.png "Instrumentation key")
-
-7.  If you visit the Azure Portal for your Azure subscription, you should now see the three newly created resource groups.
-
-    ![In this screenshot, TailspinToys-dev, TailspinToys-production, and TailspinToys-test appear under Resource groups in the Azure Portal.](images/stepbystep/media/image55.png "Resource groups screenshot")
-
-## Exercise 2: Create Azure DevOps project and Git Repository
-
-Duration: 15 Minutes
-
-In this exercise, you will create and configure an Azure DevOps account along with an Agile project.
-
-### Task 1: Create Azure DevOps Account
-
-1.  Browse to the Azure DevOps site at <https://dev.azure.com>.
-
-2.  If you do not already have an account, click the **Start free** button.
-    
-    ![In this screenshot, a Start free button is shown on the Azure DevOps home page.](images/stepbystep/media/image56.png "Azure DevOps screenshot")
-
-3.  Authenticate with a Microsoft account.
-
-4.  Click **Continue** to accept the Terms of Service, Privacy Statement, and Code of Conduct.
-
-5.  Choose a name for new your project. For the purposes of this scenario, we will use "TailspinToys". Choose **Private** in the Visibility section so that our project is only visible to those who we specifically grant access. Then, click **+ Create project**.
-    
-    ![In the Create a project to get started window, TailspinToys is highlighted in the Project name box, Private is highlighted in the Visibility box, and Create project is highlighted at the bottom.](images/stepbystep/media/image57.png "Create a project window")
-
-6.  Once the Project is created, click on the **Repos** menu option in the left-hand navigation.
-
-    ![In the TailspinToys project window, Repos is highlighted in the left-hand navigation.](images/stepbystep/media/image58.png "TailspinToys navigation window")
-
-7.  On the **Repos** page for the **TailspinToys** repository, locate the "or push an existing repository from command line" section. Click the Copy button to copy the contents of the panel. We're going to use these commands in an upcoming step.
-
-    
-    ![In the "Add some code!" window, URLs appear to clone to your computer or push an existing repository from command line.](images/stepbystep/media/image59.png "TailspinToys is empty. Add some code! window")
-
-### Task 2: Add the Tailspin Toys source code repository to Azure DevOps
-
-In this Task, you will configure the Azure DevOps Git repository. You will configure the remote repository using Git and then push the source code up to Azure DevOps through the command line tools.
-
-1.  Open a command prompt in the **C:\\Hackathon** folder.
-
-    > **Note**: If this folder doesn't exist ensure you followed the instructions in the Before the HOL.
-
-2.  Initialize a local Git repository by running the following command at the command prompt:
-
-    > If a ".git" folder and local repository already exists in the folder, then you will need to delete the ".git" folder first before running the commands below to initialize the Git repository.
-
-    ```
-    git init
-    ```
-
-3.  Paste the first command you copied from Azure DevOps. It will resemble the command below:
-    
-    ```
-    git remote add origin https://<your-org>@dev.azure.com/<your-org>/TailspinToys/_git/TailspinToys
-    ```
-
-4.  Enter the following commands to commit the changes made locally to the new repository:
-    
-    ```
-    git add *
-    git commit -m "adding files"
-    ```
-
-5.  Push the changes up to the Azure DevOps repository with the following command:
-
-    ```
-    git push -u origin --all
-    ```
-
-6.  Leave that command prompt window open and switch back to the web browser window for Azure DevOps from the previous Task. Navigate to the Repos > Files page which shows the files in the repository. You may need to refresh the page to see the updated files. Your source code is now appearing in Azure DevOps.
 
 ## Exercise 3: Create Azure DevOps build pipeline
 
