@@ -39,9 +39,6 @@ Microsoft and the trademarks listed at https://www.microsoft.com/en-us/legal/int
     - [Task 6: Configure the list of release environments parameters](#task-6-configure-the-list-of-release-environments-parameters)
     - [Task 7: Configure the name of the web app using the environments parameters](#task-7-configure-the-name-of-the-web-app-using-the-environments-parameters)
     - [Task 8: Add a deployment slot for the "staging" version of the site](#task-8-add-a-deployment-slot-for-the-%22staging%22-version-of-the-site)
-    - [Task 9: Create the dev environment and deploy the template to Azure](#task-9-create-the-dev-environment-and-deploy-the-template-to-azure)
-    - [Task 10: Create the test environment and deploy the template to Azure](#task-10-create-the-test-environment-and-deploy-the-template-to-azure)
-    - [Task 11: Create the production environment and deploy the template to Azure](#task-11-create-the-production-environment-and-deploy-the-template-to-azure)
   - [Exercise 2: Create Azure DevOps project and Git Repository](#exercise-2-create-azure-devops-project-and-git-repository)
     - [Task 1: Create Azure DevOps Account](#task-1-create-azure-devops-account)
     - [Task 2: Add the Tailspin Toys source code repository to Azure DevOps](#task-2-add-the-tailspin-toys-source-code-repository-to-azure-devops)
@@ -88,75 +85,7 @@ Tailspin Toys has asked you to automate their development process in two specifi
 
     -   Git command-line interface (CLI)
 
-## Exercise 1: Create Azure DevOps project and Git Repository
-
-Duration: 15 Minutes
-
-In this exercise, you will create and configure an Azure DevOps account along with an Agile project.
-
-### Task 1: Create Azure DevOps Account
-
-1.  Browse to the Azure DevOps site at <https://dev.azure.com>.
-
-2.  If you do not already have an account, click the **Start free** button.
-    
-    ![In this screenshot, a Start free button is shown on the Azure DevOps home page.](images/stepbystep/media/image56.png "Azure DevOps screenshot")
-
-3.  Authenticate with a Microsoft account.
-
-4.  Click **Continue** to accept the Terms of Service, Privacy Statement, and Code of Conduct.
-
-5.  Choose a name for new your project. For the purposes of this scenario, we will use "TailspinToys". Choose **Private** in the Visibility section so that our project is only visible to those who we specifically grant access. Then, click **+ Create project**.
-    
-    ![In the Create a project to get started window, TailspinToys is highlighted in the Project name box, Private is highlighted in the Visibility box, and Create project is highlighted at the bottom.](images/stepbystep/media/image57.png "Create a project window")
-
-6.  Once the Project is created, click on the **Repos** menu option in the left-hand navigation.
-
-    ![In the TailspinToys project window, Repos is highlighted in the left-hand navigation.](images/stepbystep/media/image58.png "TailspinToys navigation window")
-
-7.  On the **Repos** page for the **TailspinToys** repository, locate the "or push an existing repository from command line" section. Click the Copy button to copy the contents of the panel. We're going to use these commands in an upcoming step.
-
-    
-    ![In the "Add some code!" window, URLs appear to clone to your computer or push an existing repository from command line.](images/stepbystep/media/image59.png "TailspinToys is empty. Add some code! window")
-
-### Task 2: Add the Tailspin Toys source code repository to Azure DevOps
-
-In this Task, you will configure the Azure DevOps Git repository. You will configure the remote repository using Git and then push the source code up to Azure DevOps through the command line tools.
-
-1.  Open a command prompt in the **C:\\Hackathon** folder.
-
-    > **Note**: If this folder doesn't exist ensure you followed the instructions in the Before the HOL.
-
-2.  Initialize a local Git repository by running the following command at the command prompt:
-
-    > If a ".git" folder and local repository already exists in the folder, then you will need to delete the ".git" folder first before running the commands below to initialize the Git repository.
-
-    ```
-    git init
-    ```
-
-3.  Paste the first command you copied from Azure DevOps. It will resemble the command below:
-    
-    ```
-    git remote add origin https://<your-org>@dev.azure.com/<your-org>/TailspinToys/_git/TailspinToys
-    ```
-
-4.  Enter the following commands to commit the changes made locally to the new repository:
-    
-    ```
-    git add *
-    git commit -m "adding files"
-    ```
-
-5.  Push the changes up to the Azure DevOps repository with the following command:
-
-    ```
-    git push -u origin --all
-    ```
-
-6.  Leave that command prompt window open and switch back to the web browser window for Azure DevOps from the previous Task. Navigate to the Repos > Files page which shows the files in the repository. You may need to refresh the page to see the updated files. Your source code is now appearing in Azure DevOps.
-
-## Exercise 2: Create an Azure Resource Manager (ARM) template that can provision the web application, SQL database, and deployment slots in a single automated process
+## Exercise 1: Create an Azure Resource Manager (ARM) template that can provision the web application, SQL database, and deployment slots in a single automated process
 
 Duration: 45 Minutes
 
@@ -339,6 +268,75 @@ Since this solution is based on Azure Platform-as-a-Service (PaaS) technology, i
     It will look something like this screen shot:
 
     ![This is a screenshot of the code pasted just below the element for the application insights extension in the "resources" array.](images/stepbystep/media/image39.png "Pasted block of JSON code")
+
+
+## Exercise 2: Create Azure DevOps project and Git Repository
+
+Duration: 15 Minutes
+
+In this exercise, you will create and configure an Azure DevOps account along with an Agile project.
+
+### Task 1: Create Azure DevOps Account
+
+1.  Browse to the Azure DevOps site at <https://dev.azure.com>.
+
+2.  If you do not already have an account, click the **Start free** button.
+    
+    ![In this screenshot, a Start free button is shown on the Azure DevOps home page.](images/stepbystep/media/image56.png "Azure DevOps screenshot")
+
+3.  Authenticate with a Microsoft account.
+
+4.  Click **Continue** to accept the Terms of Service, Privacy Statement, and Code of Conduct.
+
+5.  Choose a name for new your project. For the purposes of this scenario, we will use "TailspinToys". Choose **Private** in the Visibility section so that our project is only visible to those who we specifically grant access. Then, click **+ Create project**.
+    
+    ![In the Create a project to get started window, TailspinToys is highlighted in the Project name box, Private is highlighted in the Visibility box, and Create project is highlighted at the bottom.](images/stepbystep/media/image57.png "Create a project window")
+
+6.  Once the Project is created, click on the **Repos** menu option in the left-hand navigation.
+
+    ![In the TailspinToys project window, Repos is highlighted in the left-hand navigation.](images/stepbystep/media/image58.png "TailspinToys navigation window")
+
+7.  On the **Repos** page for the **TailspinToys** repository, locate the "or push an existing repository from command line" section. Click the Copy button to copy the contents of the panel. We're going to use these commands in an upcoming step.
+
+    
+    ![In the "Add some code!" window, URLs appear to clone to your computer or push an existing repository from command line.](images/stepbystep/media/image59.png "TailspinToys is empty. Add some code! window")
+
+### Task 2: Add the Tailspin Toys source code repository to Azure DevOps
+
+In this Task, you will configure the Azure DevOps Git repository. You will configure the remote repository using Git and then push the source code up to Azure DevOps through the command line tools.
+
+1.  Open a command prompt in the **C:\\Hackathon** folder.
+
+    > **Note**: If this folder doesn't exist ensure you followed the instructions in the Before the HOL.
+
+2.  Initialize a local Git repository by running the following command at the command prompt:
+
+    > If a ".git" folder and local repository already exists in the folder, then you will need to delete the ".git" folder first before running the commands below to initialize the Git repository.
+
+    ```
+    git init
+    ```
+
+3.  Paste the first command you copied from Azure DevOps. It will resemble the command below:
+    
+    ```
+    git remote add origin https://<your-org>@dev.azure.com/<your-org>/TailspinToys/_git/TailspinToys
+    ```
+
+4.  Enter the following commands to commit the changes made locally to the new repository:
+    
+    ```
+    git add *
+    git commit -m "adding files"
+    ```
+
+5.  Push the changes up to the Azure DevOps repository with the following command:
+
+    ```
+    git push -u origin --all
+    ```
+
+6.  Leave that command prompt window open and switch back to the web browser window for Azure DevOps from the previous Task. Navigate to the Repos > Files page which shows the files in the repository. You may need to refresh the page to see the updated files. Your source code is now appearing in Azure DevOps.
 
 
 ## Exercise 3: Create Azure DevOps build pipeline
