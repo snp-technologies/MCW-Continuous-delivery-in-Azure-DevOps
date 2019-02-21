@@ -33,8 +33,7 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/en-us/legal/in
     - [Prerequisites](#prerequisites)
     - [Task 1: Configure a development environment](#task-1-configure-a-development-environment)
     - [Task 2: Disable IE enhanced security](#task-2-disable-ie-enhanced-security)
-    - [Task 3: Validate connectivity to Azure](#task-3-validate-connectivity-to-azure)
-    - [Task 4: Download and install Git](#task-4-download-and-install-git)
+    - [Task 3: Validate connectivity to SQL database](#task-3-validate-connectivity-to-sql-database)
 
 <!-- /TOC -->
 
@@ -106,13 +105,13 @@ If you do not have a machine setup with Visual Studio 2017 Community, complete t
 
 1.  From within the virtual machine, Launch Visual Studio 2017 and validate that you can login with your Microsoft Account when prompted.
 
-2.  Validate connectivity to your SQL server with either of following options. 
-
   - Launch Visual Studio, open SQL Server Object Explorer from the View menu, and ensure you can connect to your SQL server using SQL authentication.
   
-  - Launch SQL Server Management Studio, ensure you can connect to your SQL server using SQL authentication.
+    ![In SQL Server Object Explorer, the submenu for the SQL Server displays with the following options: Refresh, Connect to SQL Server, Manage and Filter Subscriptions, and Open Getting Started Page.](images/Setup/image8.png "SQL Server Object Explorer")
 
-    ![In Visual Studio Server Explorer, the submenu for the Azure subscription displays with the following options: Refresh, Connect to Microsoft Azure Subscription, Manage and Filter Subscriptions, and Open Getting Started Page.](images/Setup/image8.png "Visual Studio Server Explorer")
+2. Launch SQL Server Management Studio, ensure you can connect to your SQL server using SQL authentication.
+
+    ![In SSMS, Connect to SQL Server.](images/Setup/image8a.png "SSMS")
 
 **Download the exercise files**
 
