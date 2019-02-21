@@ -44,19 +44,19 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/en-us/legal/in
 
 1.  Microsoft Azure DevOps organisation and accounts.
 
-2.  Developer - Local machine or a virtual machine configured with: 
+2.  Client - For developer - Local machine or a server configured with: 
 
     -   Visual Studio Community 2017
     
     -   SQL Server Management Studio (Optional)
 
-2.  Servers - Local machine or a virtual machine configured with:
+2.  Servers - For hosting/deployment - Local machine or a server configured with:
 
     -   Powershell with Administrator privileges
     
     -   IIS
     
-    -   SQL Server 
+    -   SQL Server (Same/Different machine)
 
 ## Before the hands-on lab
 
