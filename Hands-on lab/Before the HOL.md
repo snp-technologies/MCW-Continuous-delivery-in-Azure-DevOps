@@ -1,4 +1,4 @@
-[SNP Cloud Workshops]
+# SNP Cloud Workshop
 <div class="MCWHeader1">
 Continuous delivery in Azure DevOps
 </div>
