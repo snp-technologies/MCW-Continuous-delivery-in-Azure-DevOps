@@ -27,7 +27,7 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/en-us/legal/in
 
 <!-- TOC -->
 
-- [Continuous delivery in Azure DevOps before the hands-on lab setup guide for on-premise IIS and SQL](#continuous-delivery-in-azure-devops-before-the-hands-on-lab-setup-guide for on-premise IIS and SQL)
+- [Continuous delivery in Azure DevOps before the hands-on lab setup guide for on-premise IIS and SQL](#continuous-delivery-in-azure-devops-before-the-hands-on-lab-setup-guide-for-on-premise-iis-and-sql)
   - [Requirements](#requirements)
   - [Before the hands-on lab](#before-the-hands-on-lab)
     - [Prerequisites](#prerequisites)
