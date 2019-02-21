@@ -1,5 +1,4 @@
-![](https://github.com/Microsoft/MCW-Template-Cloud-Workshop/raw/master/Media/ms-cloud-workshop.png "SNP Cloud Workshops")
-
+[SNP Cloud Workshops]
 <div class="MCWHeader1">
 Continuous delivery in Azure DevOps
 </div>
