@@ -216,7 +216,7 @@ Since this solution is based on Azure Platform-as-a-Service (PaaS) technology, i
 
     After adding the code, it will look like this:
 
-    <img src="https://github.com/your_image.png" alt="This is a screenshot of the code pasted inside the of the "parameters" object." title="Pasted block of JSON code" width="300"/>    
+    <img src="https://github.com/your_image.png" alt="This is a screenshot of the code pasted inside the parameters object." title="Pasted block of JSON code" width="300"/>    
 
 ### Task 7: Configure the name of the web app using the environments parameters
 
