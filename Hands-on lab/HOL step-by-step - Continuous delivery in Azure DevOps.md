@@ -512,11 +512,13 @@ In this exercise, you will create a release pipeline in Azure DevOps that perfor
 
     ![On the screen, task is highlighted.](images/stepbystep/media/imagee1.png "Add Azure Resource Group Deployment Task")
 
-20. Select the "Azure Resource Group Deployment" task and configure the paths of template and parameter file as highlighted.
+20. Select the "Azure Resource Group Deployment" task and configure the paths of template and parameter file as highlighted. Under "Override template parameters" paste or type in these parameters
+
+-tailspinsqlAdminLogin $(tailspinsqlAdminLogin) -tailspinsqlAdminLoginPassword $(tailspinsqlAdminLoginPassword) -environment $(environment) -TailspinDataName $(TailspinDataName) -TailspinToysHostingPlanName $(TailspinToysHostingPlanName) -TailspinToysHostingPlanSkuName $(TailspinToysHostingPlanSkuName)
 
     ![On the screen, configure task as highlighted.](images/stepbystep/media/imagee2.png "Configure Azure Resource Group Deployment Task")
 
-21. Configure the variables for different environments.
+21. Register and configure the variables that are being used as parameters in previous step.
 
     ![On the screen, configure variables as highlighted.](images/stepbystep/media/imagee3.png "Configure variables")
 
