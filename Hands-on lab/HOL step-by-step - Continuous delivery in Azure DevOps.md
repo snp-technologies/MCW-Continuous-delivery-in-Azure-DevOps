@@ -476,7 +476,7 @@ In this exercise, you will create a release pipeline in Azure DevOps that perfor
 
 10. Then, in the "App service name field" select the one that begins with **TailspinToysWeb-dev-**.
 
-    <img src="images/stepbystep/media/image89c.pn" alt="Service connections" title="On the panel, App service name is highlighted." width="500">
+    <img src="images/stepbystep/media/image89c.png" alt="Service connections" title="On the panel, App service name is highlighted." width="500">
 
 11. Now, let's configure the task specific details. Click on the "Deploy Azure App Service" task to bring up the configuration panel for task.
 
