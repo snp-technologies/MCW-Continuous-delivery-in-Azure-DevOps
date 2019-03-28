@@ -39,6 +39,7 @@ Microsoft and the trademarks listed at https://www.microsoft.com/en-us/legal/int
     - [Task 6: Configure the list of release environments parameters](#task-6-configure-the-list-of-release-environments-parameters)
     - [Task 7: Configure the name of the web app using the environments parameters](#task-7-configure-the-name-of-the-web-app-using-the-environments-parameters)
     - [Task 8: Add a deployment slot for the "staging" version of the site](#task-8-add-a-deployment-slot-for-the-%22staging%22-version-of-the-site)
+    - [Task 9: Add parameter values](#task-9-add-parameter-values)
   - [Exercise 2: Create Azure DevOps project and Git Repository](#exercise-2-create-azure-devops-project-and-git-repository)
     - [Task 1: Create Azure DevOps Account](#task-1-create-azure-devops-account)
     - [Task 2: Add the Tailspin Toys source code repository to Azure DevOps](#task-2-add-the-tailspin-toys-source-code-repository-to-azure-devops)
@@ -257,6 +258,28 @@ Since this solution is based on Azure Platform-as-a-Service (PaaS) technology, i
 
     ![This is a screenshot of the code pasted just below the element for the application insights extension in the "resources" array.](images/stepbystep/media/image39.png "Pasted block of JSON code")
 
+### Task 9: Add parameter values
+
+1.  In Solution Explorer, double-click the **azuredeploy.parameters.json** file to open it for editing. Enter this code in the parameters element:
+
+     ```
+    "tailspinsqlAdminLogin": {
+      "value": "sqladmin"
+    },
+    "TailspinDataName": {
+      "value": "TailspinToysData"
+    },
+    "TailspinToysHostingPlanName": {
+      "value": "TailspinToysHostingPlan"
+    },
+    "TailspinToysHostingPlanSkuName": {
+      "value": "S1"
+    }
+    ```
+    It will look something like this screen shot:
+
+    <img src="images/stepbystep/media/snp-image21.png"  alt="A screenshot from Visual Studio depicting the code in azuredeploy.parameters.json." title="Visual Studio screenshot" width="600">
+
 
 ## Exercise 2: Create Azure DevOps project and Git Repository
 
@@ -446,141 +469,167 @@ In this exercise, you will create a release pipeline in Azure DevOps that perfor
 
     <img src="images/stepbystep/media/image84.png" alt="A screen that shows the left-side navigation. Releases is highlighted." title="Releases" width="300">
 
-2.  Click on the **New pipeline** button to begin the creation of a new release pipeline. 
+1.  Click on the **New pipeline** button to begin the creation of a new release pipeline. 
 
     <img src="images/stepbystep/media/image85.png" alt="On the Releases screen, the New pipeline button is highlighted." title="Releases screen" width="500">
 
-3. When prompted to "Select a template", click on "Emtpy job". Next, we will add tasks to our new pipeline.
+1. When prompted to "Select a template", click on **Emtpy job**. Next, we will add tasks to our new pipeline.
 
-4.  This will present you with the New release pipeline editor which allows you to manage your release stages. A stage is a logical and independent concept that represents where you want to deploy a release generated from a release pipeline. Often times, this is considered an environment. Let's start by giving this stage a name. Change the value "Stage 1" in the editor to "dev" and then click the "X" in the top-right corner to close the panel and save the name change.
+    <img src="images/stepbystep/media/snp-image01.png" alt="On the Select a template screen, the Empty job link is highlighted." title="Select a template screen" width="500">
+
+1.  This will present you with the New release pipeline editor which allows you to manage your release stages. A stage is a logical and independent concept that represents where you want to deploy a release generated from a release pipeline. Often times, this is considered an environment. Let's start by giving this stage a name. Change the value "Stage 1" in the editor to "dev" and then click the "X" in the top-right corner to close the panel and save the name change.
 
     ![A screen that shows Stage details. The Stage name is highlighted. The X is also highlighted.](images/stepbystep/media/image86.png "Stage")
 
-5.  A release consists of a collection of artifacts in your CD/CD process. An artifact is any deployable component of your application. When authoring a release pipeline, you link the appropriate artifact sources to your release pipeline. In this step, we will connect the artifacts from our previously created build pipeline to this newly created release pipeline. Click on the "+ Add" button next to "Artifacts" or the "+ Add an artifact" icon inside the "Artifacts" box. Both buttons perform the same action.
+1.  A release consists of a collection of artifacts in your CD/CD process. An artifact is any deployable component of your application. When authoring a release pipeline, you link the appropriate artifact sources to your release pipeline. In this step, we will connect the artifacts from our previously created build pipeline to this newly created release pipeline. Click on the "+ Add" button next to "Artifacts" or the "+ Add an artifact" icon inside the "Artifacts" box. Both buttons perform the same action.
 
     ![+ Add and + Add an artifact are highlighted in this step.](images/stepbystep/media/image87.png "New release pipeline")
 
-6.  The Add an artifact panel will display several configurations for linking to an artifact. In the **Source (build pipeline)** dropdown list, select **TailspinToys**. The panel fields will adjust to show additional details based on your selection. The default values will produce a new release when future builds successfully complete. Click the **Add** button.
+1.  The Add an artifact panel will display several configurations for linking to an artifact. In the **Source (build pipeline)** dropdown list, select **TailspinToys**. The panel fields will adjust to show additional details based on your selection. The default values will produce a new release when future builds successfully complete. Click the **Add** button.
 
     <img src="images/stepbystep/media/image88.png" alt="On the Add an artifact screen, TailspinToys is highlighted in the Source (build pipeline) field, and the Add button is highlighted at the bottom." title="Add an artifact" width="500">
 
-7.  Now, it is time to begin configuring specific tasks to perform our deployment during the dev stage. To navigate to the task editor, click on the **Task** menu item.
+1.  Now, it is time to begin configuring specific tasks to perform our deployment during the dev stage. To navigate to the task editor, click on the **Task** menu item.
 
     <img src="images/stepbystep/media/image89.png" alt="In the menu, the Tasks item is highlighted." title="New release pipeline" width="500">
 
-8.  This brings up the task editor and opens a panel with configuration details for the dev stage we created earlier. The configuration items set here will be made available to the tasks in this stage.
+1.  This brings up the task editor and opens a  configuration panel for the dev stage we created earlier. The configuration items set here will be made available to the tasks in this stage.
 
-9. Our first task is to deploy the ARM Template we configured earlier in Excercise 1. This will set up all of the Azure resources required for the hosting of our application. Click on the + symbol to the right of the "Agent job" task. Search for the "Azure Resource Group Deployment" task. Click on the "Add" button.
+1.  Our first task is to deploy the ARM Template we configured earlier in Exercise 1. This will set up all of the Azure resources required for the hosting of our application. Click on the + symbol to the right of the **Agent job** task. 
 
-    ![On the screen, task is highlighted.](images/stepbystep/media/imagee1.png "Add Azure Resource Group Deployment Task")
-
-10. Select the "Azure Resource Group Deployment" task, In the configuration panel that opens to the right:
-
-- Select your Azure subscription and click the "Authorize" button
-- For Resource group, enter "TailspinToys-dev"
-- For "Location", select "East US"
-- For "Template", click on the elipses to the right of the text box. In the "Select a file or folder" dialog box, expand the Linked artifacts tree down to the TailspinToys.AzureResourceTempate folder, and select "azuredeploy.json" and click the "OK" button.
-- Repeat for the "Template parameters" input, but this time select the "azuredeploy.parameters.json" and click the "OK" button.
-- Lastly, we need to enter template parameter values to be consumed by the ARM Template. In the "Override template parameters" text area,  paste the following content:
-```
--environment $(environment) -tailspinsqlAdminLogin $(tailspinsqlAdminLogin) -tailspinsqlAdminLoginPassword $(tailspinsqlAdminLoginPassword) -TailspinDataName $(TailspinDataName) -TailspinToysHostingPlanName $(TailspinToysHostingPlanName) -TailspinToysHostingPlanSkuName $(TailspinToysHostingPlanSkuName)
-```
-
-> Note the "Deployment mode" is set to "Incremental", which handles deployments as incremental updates to the resource group. It leaves unchanged resources that exist in the resource group but are not specified in the template. We will keep this default value. 
-
-    ![On the screen, configure task as highlighted.](images/stepbystep/media/imagee2.png "Configure Azure Resource Group Deployment Task")
+    <img src="images/stepbystep/media/snp-image02.png" alt="On the New release pipeline screen, the Add a task to Agent job botton is highlighted." title="Add a task to Agent job" width="500">
     
-11.  Next, we need to define the Pipeline variables that line up with our ARM Template parameters. Click on the "Variables" tab and add the following variables:
+1. Search for the "Azure Resource Group Deployment" task. Click on the **Add** button.
 
-|Name|Value|
-|----|-----|
-|environment|dev|
-|tailspinsqlAdminLogin|sqladmin|
-|tailspinsqlAdminLoginPassword|UniquePassword|
-|TailspinDataName|TailspinToysData|
-|TailspinToysHostingPlanName|TailspinToysHostingPlan|
-|TailspinToysHostingPlanSkuName|S1|
+    <img src="images/stepbystep/media/snp-image03.png" alt="On the New release pipeline screen, the Add a task to Agent job botton is highlighted." title="Add a task to Agent job" width="500">
 
-> Tip: Click the lock symbol to the right of the password value to change the variable type from plain text to secret.
+1. Select the **Azure Deployment** task.
 
-    ![On the screen, configure variables as highlighted.](images/stepbystep/media/imagee3.png "Configure variables")
+    <img src="images/stepbystep/media/snp-image04.png" alt="On the New release pipeline screen, the Azure Deployment task is highlighted." title="Select the Azure Deployment task" width="500">
+    
+1. In the configuration panel that opens to the right:
 
-12. Let's take a break from this activity to save and validate our work in progress. But before we do that, let's give our release pipeline a more meaningful name. Click on the existing "New release pipeline" name to begin editing it. Change the name to "TailspinToys Release".
+- Select your Azure subscription and click the **Authorize** button
 
-    <img src="images/stepbystep/media/image92a.png" alt="On the screen, TailspinToys Release name is highlighted." title="Release pipeline name change" width="500">
+    <img src="images/stepbystep/media/snp-image05.png" alt="On the Azure Deployment configuration panel, the Azure subscription input is highlighted." title="Select the Azure subscription" width="500">
+
+- For **Resource group**, enter "TailspinToys-dev"
+- For **Location**, select "East US"
+
+    <img src="images/stepbystep/media/snp-image06.png" alt="On the Azure Deployment configuration panel, Resource group and Location inputs are highlighted." title="Select Resource group and Location" width="500">
+
+- For **Template**, click on the ellipses to the right of the Template text box. In the **Select a file or folder** dialog box, expand the Linked artifacts tree down to the TailspinToys.AzureResourceTempate folder, and select **azuredeploy.json** and click the **OK** button.
+
+    <img src="images/stepbystep/media/snp-image07.png" alt="On the Azure Deployment configuration panel, Template input is highlighted." title="Click ellipses to open the Select a file or folder dialog" width="500">
+
+    <img src="images/stepbystep/media/snp-image08.png" alt="In the Select a file or folder dialog box, azuredeploy.json file is highlighted." title="Select the azuredeploy.json file" width="500">
+
+- Repeat for the **Template parameters** input, but this time select the **azuredeploy.parameters.json** file and click the **OK** button. The result of these last two steps should resemble the screen shot below.
+
+    <img src="images/stepbystep/media/snp-image09.png" alt="On the Azure Deployment configuration panel, Template and Template parameters inputs are highlighted." title="Confirm Template and Template parameters" width="500">
 
 
-13.  Now, save your changes by clicking the "Save" icon above the task configuration panel. 
+- Lastly, we need to enter template parameter values that are environment specific and not included in the **azuredeploy.parameters.json** file. In the **Override template parameters** text area, paste the following content:
 
-#Add image
+    ```
+    -environment dev -tailspinsqlAdminLoginPassword $tailspinsqlAdminLoginPassword)
+    ```
+    <img src="images/stepbystep/media/snp-image12.png" alt="On the Azure Deployment configuration panel, Override template parameters is highlighted." title="Override template parameters" width="500">
 
-14.  Although we are not deploying our application just yet, we'll need to select an Artifact Version. Select the version created by the build pipeline. Then click the "Create" button.
 
-## Add image
+1.   You may have noticed that we have not yet set a value for our SQL admin password. Since this is a secret, we want to take more care to protect the information. Using the **azuredeploy.parameters.json** or **Override template parameters** text area options would expose the secret as plain text, which of course is not desirable.
 
-15.  Let's manually commence a release in order to complete an initial deployment of our required Azure resources. Click the "Release" drop down and select "Create a Release." 
+      An excellent alternative is Azure Key Vault, but in the interest of time we'll take a different approach - store as a secret Variable in the Release configuration itself.
+  
+      Click on the "Variables" tab.
 
-## Add image
+      <img src="images/stepbystep/media/snp-image10.png" alt="On the New release pipeline screen, the Variables tab is highlighted." title="Variables tab" width="500">
+      
+      Add the following variable:
 
-16.  An alert will appear on the screen like the image shown below.
+      |Name|Value|
+      |----|-----|
+      |tailspinsqlAdminLoginPassword|SomeUniquePassword|
 
-## Add image
+      Click the lock symbol to the right of the password value to change the variable type from plain text to secret.
 
-17.   Click the "Release-1" link. This will direct you to the release Logs tab where you can observe the agent job in progress. When it completes, you should see a green checkmark to the left of each task. 
+      <img src="images/stepbystep/media/snp-image11.png" alt="On the Variables configuration panel, the SQL password Variable input is highlighted." title="SQL password Variable" width="600">
 
-## Add image
+      > Note that the **Deployment mode** is set to "Incremental", which handles deployments as incremental updates to the resource group. It leaves resources unchanged that exist in the resource group but are not specified in the template. We will keep this default value.
 
-18.  You can navigate to your Azure Portal to confirm that your resource deployment. It should appears as below.
+1.   Let's take a break from this activity to save and validate our work in progress. But before we do that, let's give our release pipeline a more meaningful name. Click on the existing "New release pipeline" name to begin editing it. Change the name to "TailspinToys Release".
 
-## Add image
+     <img src="images/stepbystep/media/image92a.png" alt="On the Release screen, TailspinToys Release name is highlighted." title="Release pipeline name change" width="500">
 
-19.  Now, let's complete the final tasks needed to wrap up our pipeline. Click on the "TailspinToys Release" pipeline and click the "Edit"  button. Then click on the "Tasks" tab.
+1.    Now, save your changes by clicking the **Save** icon above the task configuration panel. 
 
-## Add image
+1.    Let's manually commence a release in order to complete an initial deployment of our required Azure resources. Click the "Release" drop down and select "Create a Release." 
 
-20. You'll need to select the template that matches the pipeline you are building. Click the **+** (plus sign) on the task list to create a new task. Search for the "Azure App Service Deploy" task. Click on the "Add" button.
+      <img src="images/stepbystep/media/snp-image14.png" alt="On the TailspinToys Release screen, Create a release is highlighted." title="Create a release" width="300">
 
-## Replace image
-    <img src="images/stepbystep/media/image85a.png" alt="A screen that shows choosing Azure App Service deployment." title="Select a template" width="500">
+1.    Although we are not ready to deploy our application yet, we'll need to select an Artifact Version. Select the version created by the build pipeline. Then click the "Create" button.
 
-9.  Click on the task to open its configuration panel. On this panel, we first need to configure the necessary details to connect the task to Azure for deployment. Let's first start by connecting to our Azure subscription. Select your Azure subscription from the "Azure subscription" dropdown. Click the **Authorize** button to login and authenticate to the selected subscription, if prompted.
+      <img src="images/stepbystep/media/snp-image13.png" alt="On the Variables configuration panel, the SQL password Variable input is highlighted." title="SQL password Variable" width="500">
 
-    <img src="images/stepbystep/media/image89b.png" alt="On the panel, Azure subscription is highlighted along with the Authorize button." title="Parameters" width="500">
+1.    An alert will appear on the screen like the image shown below.
 
-10. Then, in the "App service name field" select the one that begins with **TailspinToysWeb-dev-**.
+      <img src="images/stepbystep/media/snp-image15.png" alt="On the TailspinToys Release screen, a Release alert is displayed." title="Release alert" width="500">
+
+1.    Click the **Release-1** link. This will direct you to the release Logs tab where you can observe the agent job in progress. When it completes, you should see a green checkmark to the left of each task. 
+
+      <img src="images/stepbystep/media/snp-image16.png" alt="On the TailspinToys Release log screen, the Agent job status is displayed." title="Agent job status" width="500">
+
+1.    You can navigate to your Azure Portal to confirm that your resource deployment. It should appears as below.
+
+      <img src="images/stepbystep/media/snp-image17.png" alt="In Azure Portal, the TailspinToys-Dev resource group is displayed." title="TailspinToys-Dev Resource group" width="500">
+
+1.    Now, let's complete the final tasks needed to wrap up our release pipeline. Click on the **TailspinToys Release** pipeline and click the **Edit**  button. Then click on the **Tasks** tab.
+
+      <img src="images/stepbystep/media/snp-image19.png" alt="On the Release screen, the TailspinToys Release is highlighted." title="TailspinToys Release" width="500">
+
+      <img src="images/stepbystep/media/snp-image18.png" alt="On the TailspinToys Release screen, the Tasks tab is highlighted." title="Tasks tab" width="500">
+
+1.   You'll need to select the template that matches the pipeline you are building. Click the **+** (plus sign) on the task list to create a new task. Search for the "Azure App Service Deploy" task. Click on the **Add** button.
+
+     <img src="images/stepbystep/media/snp-image20.png" alt="A screen that shows choosing Azure App Service deployment." title="Select a task" width="500">
+
+1.   Click on the task to open its configuration panel. On this panel, we first need to configure the necessary details to connect the task to Azure for deployment. Let's first start by connecting to our Azure subscription. Select your Azure subscription from the **Azure subscription** dropdown. Click the **Authorize** button to login and authenticate to the selected subscription, if prompted.
+
+     <img src="images/stepbystep/media/image89b.png" alt="On the panel, Azure subscription is highlighted along with the Authorize button." title="Parameters" width="500">
+
+1.  Then, in the "App service name field" select the one that begins with **TailspinToysWeb-dev-**.
 
     <img src="images/stepbystep/media/image89c.png" alt="Service connections" title="On the panel, App service name is highlighted." width="500">
 
-12. In a previous exercise, we created a deployment slot for the web app. Deployment slots are actually live apps with their own hostnames. App content and configuration elements can be swapped between two deployment slots, including the production slot. In the "Azure App Service Deploy" panel, locate the **Deploy to slot** checkbox and click it to checked.
+1.  In a previous exercise, we created a deployment slot for the web app. Deployment slots are actually live apps with their own hostnames. App content and configuration elements can be swapped between two deployment slots, including the production slot. In the "Azure App Service Deploy" panel, locate the **Deploy to slot** checkbox and click it to checked.
 
     <img src="images/stepbystep/media/image89e.png" alt="On the panel, Deploy to slot is highlighted." title="Azure App Service Deploy" width="500">	
 
-13. The checkbox will trigger the panel to update with additional configuration items. In the **Resource group** dropdown, select **TailspinToys-dev**. In the **Slot** dropdown, select **staging**.
+1.  The checkbox will trigger the panel to update with additional configuration items. In the **Resource group** dropdown, select **TailspinToys-dev**. In the **Slot** dropdown, select **staging**.
 
     <img src="images/stepbystep/media/image89f.png" alt="On the panel, Resource group and Slot are highlighted." title="Deployment slot configuration" width="500">	
 
-14. Now that we've completed the configuration for the "Azure App Service Deploy" task to deploy our application to Azure App Service deployment slot, we'll need a way to swap the staging slot with the production slot. To do that, we'll need to add an additional task to the dev stage. Click the **+** (plus sign) on the task list to create a new task.
+1.  Now that we've completed the configuration for the "Azure App Service Deploy" task to deploy our application to Azure App Service deployment slot, we'll need a way to swap the staging slot with the production slot. To do that, we'll need to add an additional task to the dev stage. Click the **+** (plus sign) on the task list to create a new task.
 
-## Replace image
-    <img src="images/stepbystep/media/image89g.png" alt="On the screen, the plus sign is highlighted." title="Task list" width="500">	
+     <img src="images/stepbystep/media/snp-image20.png" alt="A screen that shows choosing Azure App Service deployment." title="Add a task" width="500">
 
-15. This opens the "Add tasks" panel. Enter **App Service Manage** into the search box and press **Enter**. Then select the **Azure App Service Manage** task from the search results and click the **Add** button.
+1. This opens the "Add tasks" panel. Enter **App Service Manage** into the search box and press **Enter**. Then select the **Azure App Service Manage** task from the search results and click the **Add** button.
 
     <img src="images/stepbystep/media/image90.png" alt="On the panel, App Service Manage is entered into the search textbox and Azure App Service Manage is highlighted." title="Add tasks" width="500">
 
-16. After adding the new task, we now have two tasks for the dev stage. The new task now needs to be configured. Click on the **Swap Slots:** task to open the task configuration panel.
+28. After adding the new task, we now have two tasks for the dev stage. The new task now needs to be configured. Click on the **Swap Slots:** task to open the task configuration panel.
 
     <img src="images/stepbystep/media/image91.png" alt="On the screen, the Swap Slots task is highlighted." title="Task list"" width="500">	
 
-17. In the "Azure App Service Manage" task panel there are a few configurations we need to set. First, locate the "Azure subscription" field and select the same subscription used in the "Deploy Azure App Service" task.
+29. In the **Azure App Service Manage** task panel there are a few configurations we need to set. First, locate the **Azure subscription** field and select the same subscription used in the **Deploy Azure App Service** task.
 
-18. Locate the "App Service name" field, select the item that begins with **TailspinToysWeb-dev-** just like in the "Deploy Azure App Service" task. In the "Resource Group" field, select **TailspinToys-dev**. In the "Source Slot" field, select **staging**.
+30. Locate the **App Service name** field, select the item that begins with "TailspinToysWeb-dev-" just like in the **Deploy Azure App Service** task. In the **Resource Group** field, select "TailspinToys-dev". In the **Source Slot** field, select "staging".
 
     <img src="images/stepbystep/media/image92.png" alt="On the panel, App Service name, Resource group, and Source Slot are all highlighted." title="Swap Slots task configuration" width="500">	
 
-19. Click the "Save" button at the top of the screen and confirm by clicking the "OK" button.
+31. Click the **Save** button at the top of the screen and confirm by clicking the **OK** button.
 
-20. Congratulations! You have just created your first release pipeline.
+32. Congratulations! You have just created your first release pipeline.
 
 ### Task 2: Add test and production environments to release pipeline
 
