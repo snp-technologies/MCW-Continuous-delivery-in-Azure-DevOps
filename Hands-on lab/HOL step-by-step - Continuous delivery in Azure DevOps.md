@@ -121,7 +121,7 @@ Since this solution is based on Azure Platform-as-a-Service (PaaS) technology, i
     
     ![In the Solution Explorer window, azuredeploy.json is highlighted under TailspinToys.AzureResourceTemplate.](images/stepbystep/media/image24.png "Selecting the azuredeploy.json file")
 
-4.  Then, probably on the left side of the Visual Studio window, open the window called JSON Outline. It will look like this screen shot:
+4.  Then, probably on the left side of the Visual Studio window, open the window called JSON Outline. It will resemble the screen shot below:
     
     ![The screenshot of the JSON Outline window depicts the following: parameters (0), variables (0), resources (0), and outputs (0).](images/stepbystep/media/image25.png "JSON Outline window")
 
@@ -516,35 +516,40 @@ In this exercise, you will create a release pipeline in Azure DevOps that perfor
 
 14.  Although we are not deploying our application just yet, we'll need to select an Artifact Version. Select the version created by the build pipeline. Then click the "Create" button.
 
-#Add image
+## Add image
 
 15.  Let's manually commence a release in order to complete an initial deployment of our required Azure resources. Click the "Release" drop down and select "Create a Release." 
 
-#Add image
+## Add image
 
 16.  An alert will appear on the screen like the image shown below.
 
-#Add image
+## Add image
 
 17.   Click the "Release-1" link. This will direct you to the release Logs tab where you can observe the agent job in progress. When it completes, you should see a green checkmark to the left of each task. 
 
-#Add image
+## Add image
 
-3.  Next, you'll need to select the template that matches the pipeline you are building. Click on the + symbol to the right of the "Agent job" task. Search for the "Azure App Service Deploy" task. Click on the "Add" button.
+18.  You can navigate to your Azure Portal to confirm that your resource deployment. It should appears as below.
 
+## Add image
+
+19.  Now, let's complete the final tasks needed to wrap up our pipeline. Click on the "TailspinToys Release" pipeline and click the "Edit"  button. Then click on the "Tasks" tab.
+
+## Add image
+
+20. You'll need to select the template that matches the pipeline you are building. Click the **+** (plus sign) on the task list to create a new task. Search for the "Azure App Service Deploy" task. Click on the "Add" button.
+
+## Replace image
     <img src="images/stepbystep/media/image85a.png" alt="A screen that shows choosing Azure App Service deployment." title="Select a template" width="500">
 
-9.  On this panel, we first need to configure the necessary details to connect the task to Azure for deployment. Let's first start by connecting to our Azure subscription. Select your Azure subscription from the "Azure subscription" dropdown. Click the **Authorize** button to login and authenticate to the selected subscription, if prompted.
+9.  Click on the task to open its configuration panel. On this panel, we first need to configure the necessary details to connect the task to Azure for deployment. Let's first start by connecting to our Azure subscription. Select your Azure subscription from the "Azure subscription" dropdown. Click the **Authorize** button to login and authenticate to the selected subscription, if prompted.
 
     <img src="images/stepbystep/media/image89b.png" alt="On the panel, Azure subscription is highlighted along with the Authorize button." title="Parameters" width="500">
 
 10. Then, in the "App service name field" select the one that begins with **TailspinToysWeb-dev-**.
 
     <img src="images/stepbystep/media/image89c.png" alt="Service connections" title="On the panel, App service name is highlighted." width="500">
-
-11. Now, let's configure the task specific details. Click on the "Deploy Azure App Service" task to bring up the configuration panel for task.
-
-    <img src="images/stepbystep/media/image89d.png" alt="On the screen, Deploy Azure App Service is highlighted." title="Deploy Azure App Service" width="500">	
 
 12. In a previous exercise, we created a deployment slot for the web app. Deployment slots are actually live apps with their own hostnames. App content and configuration elements can be swapped between two deployment slots, including the production slot. In the "Azure App Service Deploy" panel, locate the **Deploy to slot** checkbox and click it to checked.
 
@@ -554,8 +559,9 @@ In this exercise, you will create a release pipeline in Azure DevOps that perfor
 
     <img src="images/stepbystep/media/image89f.png" alt="On the panel, Resource group and Slot are highlighted." title="Deployment slot configuration" width="500">	
 
-14. Now that we've completed the configuration for the "Deploy Azure App Service" task to deploy our application to Azure App Service deployment slot, we'll need a way to swap the staging slot with the production slot. To do that, we'll need to add an additional task to the dev stage. Click the **+** (plus sign) on the task list to create a new task.
+14. Now that we've completed the configuration for the "Azure App Service Deploy" task to deploy our application to Azure App Service deployment slot, we'll need a way to swap the staging slot with the production slot. To do that, we'll need to add an additional task to the dev stage. Click the **+** (plus sign) on the task list to create a new task.
 
+## Replace image
     <img src="images/stepbystep/media/image89g.png" alt="On the screen, the plus sign is highlighted." title="Task list" width="500">	
 
 15. This opens the "Add tasks" panel. Enter **App Service Manage** into the search box and press **Enter**. Then select the **Azure App Service Manage** task from the search results and click the **Add** button.
@@ -564,7 +570,7 @@ In this exercise, you will create a release pipeline in Azure DevOps that perfor
 
 16. After adding the new task, we now have two tasks for the dev stage. The new task now needs to be configured. Click on the **Swap Slots:** task to open the task configuration panel.
 
-    <img src="images/stepbystep/media/image91.png" alt="On the screen, the Swap Slots task is highlighted." title=Task list"" width="500">	
+    <img src="images/stepbystep/media/image91.png" alt="On the screen, the Swap Slots task is highlighted." title="Task list"" width="500">	
 
 17. In the "Azure App Service Manage" task panel there are a few configurations we need to set. First, locate the "Azure subscription" field and select the same subscription used in the "Deploy Azure App Service" task.
 
@@ -572,9 +578,9 @@ In this exercise, you will create a release pipeline in Azure DevOps that perfor
 
     <img src="images/stepbystep/media/image92.png" alt="On the panel, App Service name, Resource group, and Source Slot are all highlighted." title="Swap Slots task configuration" width="500">	
 
-23. Click the "Save" button at the top of the screen and confirm by clicking the "OK" button.
+19. Click the "Save" button at the top of the screen and confirm by clicking the "OK" button.
 
-24. Congratulations! You have just created your first release pipeline.
+20. Congratulations! You have just created your first release pipeline.
 
 ### Task 2: Add test and production environments to release pipeline
 
@@ -588,31 +594,11 @@ In this exercise, you will create a release pipeline in Azure DevOps that perfor
 
     <img src="images/stepbystep/media/image96a.png" alt="On the panel, Stage name is highlighted." title="Stage configuration panel" width="500">	
 
-4.  Now, we will begin modifying the configuration specifics for the test stage. Click the "1 job, 2 tasks" link for the test stage.
+4.  Now, we will begin modifying the configuration specifics for the test stage. Now the challenge is for you to do this on your own. To be fair, here is a hint...The test stage settings are the same as configured for the dev stage because we cloned the dev stage to create the test stage. Consider what values need to be updated for the tasks and variables.
 
-    <img src="images/stepbystep/media/image97.png" alt="On the screen, 1 job, 2 tasks is highlighted." title="Begin configuring the test stage" width="500">	
+5. Once you have successfully configured and the test stage, replicate for the production stage.
 
-5.  This opens the configuration panel for the stage and includes several pre-populated fields. Locate the **App service name** field and change the value to the app service that starts with **TailspinToysWeb-test-**.
-
-    <img src="images/stepbystep/media/image97a.png" alt="On the panel, App service name is highlighted." title="Stage configuration panel" width="500">	
-
-6.  Select the "Deploy Azure App Service" task to bring up the task configuration panel. Notice the settings are the same as when we configured it for the dev stage because we cloned the dev stage to create the test stage. You may need to scroll down the panel to see additional fields.
-
-7.  Locate the **Resource group** field and select **TailspinToys-test**. Then, locate the **Slot** field and select **staging**.
-
-    <img src="images/stepbystep/media/image98.png" alt="On the panel, Resource group and Slot are highlighted." title="Task configuration panel" width="500">	
-
-8.  Now, select the "Swap Slots" task to bring up the task configuration panel. First, locate the **Display name** field and simplify it to **Swap Slots**. Then, locate the **App Service name** and select the app service that starts with **TailspinToys-test-**. Next, locate the **Resource group** field and change the value to **TailspinToys-test**. Finally, locate the **Source Slot** field and set it to **staging**.
-
-    <img src="images/stepbystep/media/image99.png" alt="On the panel, Display name, App Service name, Resource group, and Source Slot are highlighted." title="Configure the Swap Slots task" width="500">	
-
-9.  Click the "Save" button at the top of the screen, and confirm by clicking the "OK" button.
-
-10. Congratulations! You have just created a test stage and added it to your pipeline.
-
-11. Repeat all of the steps in Task 2 to create a production stage being careful to enter "production" as a replacement for "test" and selecting "TailspinWeb-production" instead of "TailspinWeb-test" where applicable. Do not forget to configure to individual steps in the newly cloned production environment.
-
-12. The final release pipeline should look like the screen shot below:
+6. The final release pipeline should look like the screen shot below:
 
     ![On the screen, all three stages are shown: dev, test, and production.](images/stepbystep/media/image100.png "The final release pipeline")
 
