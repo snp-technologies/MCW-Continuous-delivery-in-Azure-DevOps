@@ -47,7 +47,23 @@ Microsoft and the trademarks listed at https://www.microsoft.com/en-us/legal/int
     - [Task 1: Create a build pipeline](#task-1-create-a-build-pipeline)
   - [Exercise 4: Create Azure DevOps release pipeline](#exercise-4-create-azure-devops-release-pipeline)
     - [Task 1: Create a release definition](#task-1-create-a-release-definition)
-    - [Task 2: Add test and production environments to release pipeline](#task-2-add-test-and-production-environments-to-release-pipeline)
+    - [Task 2: Add Azure Deployment task](#task-2-add-azure-deployment-task)
+    - [Task 3: Add a SQL password variable](#task-3-add-a-sql-password-variable)
+    - [Task 4: Deploy the ARM Template](#task-4-deploy-the-arm-template)
+    - [Task 5: Add an artifact](#task-5-add-an-artifact)
+    - [Task 6: Add App Service Deploy task](#task-6-add-app-service-deploy-task)
+    - [Task 7: Add test and production environments to release pipeline](#task-7-add-test-and-production-environments-to-release-pipeline)
+    - [Task 8: Enable continuous deployment trigger](#task-8-enable-continuous-deployment-trigger)
+  - [Exercise 5: Trigger a build and release](#exercise-5-trigger-a-build-and-release)
+    - [Task 1: Manually queue a new build and follow it through the release pipeline](#task-1-manually-queue-a-new-build-and-follow-it-through-the-release-pipeline)
+  - [Exercise 6: Create a feature branch and submit a pull request](#exercise-6-create-a-feature-branch-and-submit-a-pull-request)
+    - [Task 1: Create a new branch](#task-1-create-a-new-branch)
+    - [Task 2: Make a code change to the feature branch](#task-2-make-a-code-change-to-the-feature-branch)
+    - [Task 3: Submit a pull request](#task-3-submit-a-pull-request)
+    - [Task 4: Approve and complete a pull request](#task-4-approve-and-complete-a-pull-request)
+  - [After the hands-on lab](#after-the-hands-on-lab)
+    - [Task 1: Delete resources](#task-1-delete-resources)
+
   - [Exercise 5: Trigger a build and release](#exercise-5-trigger-a-build-and-release)
     - [Task 1: Manually queue a new build and follow it through the release pipeline](#task-1-manually-queue-a-new-build-and-follow-it-through-the-release-pipeline)
   - [Exercise 6: Create a feature branch and submit a pull request](#exercise-6-create-a-feature-branch-and-submit-a-pull-request)
@@ -481,17 +497,11 @@ In this exercise, you will create a release pipeline in Azure DevOps that perfor
 
     ![A screen that shows Stage details. The Stage name is highlighted. The X is also highlighted.](images/stepbystep/media/image86.png "Stage")
 
-1.  A release consists of a collection of artifacts in your CD/CD process. An artifact is any deployable component of your application. When authoring a release pipeline, you link the appropriate artifact sources to your release pipeline. In this step, we will connect the artifacts from our previously created build pipeline to this newly created release pipeline. Click on the "+ Add" button next to "Artifacts" or the "+ Add an artifact" icon inside the "Artifacts" box. Both buttons perform the same action.
-
-    ![+ Add and + Add an artifact are highlighted in this step.](images/stepbystep/media/image87.png "New release pipeline")
-
-1.  The Add an artifact panel will display several configurations for linking to an artifact. In the **Source (build pipeline)** dropdown list, select **TailspinToys**. The panel fields will adjust to show additional details based on your selection. The default values will produce a new release when future builds successfully complete. Click the **Add** button.
-
-    <img src="images/stepbystep/media/image88.png" alt="On the Add an artifact screen, TailspinToys is highlighted in the Source (build pipeline) field, and the Add button is highlighted at the bottom." title="Add an artifact" width="500">
+### Task 2: Add Azure Deployment task
 
 1.  Now, it is time to begin configuring specific tasks to perform our deployment during the dev stage. To navigate to the task editor, click on the **Task** menu item.
 
-    <img src="images/stepbystep/media/image89.png" alt="In the menu, the Tasks item is highlighted." title="New release pipeline" width="500">
+    <img src="images/stepbystep/media/snp-image23.png" alt="In the menu, the Tasks item is highlighted." title="New release pipeline" width="500">
 
 1.  This brings up the task editor and opens a  configuration panel for the dev stage we created earlier. The configuration items set here will be made available to the tasks in this stage.
 
@@ -536,6 +546,7 @@ In this exercise, you will create a release pipeline in Azure DevOps that perfor
     ```
     <img src="images/stepbystep/media/snp-image12.png" alt="On the Azure Deployment configuration panel, Override template parameters is highlighted." title="Override template parameters" width="500">
 
+### Task 3: Add a SQL password variable
 
 1.   You may have noticed that we have not yet set a value for our SQL admin password. Since this is a secret, we want to take more care to protect the information. Using the **azuredeploy.parameters.json** or **Override template parameters** text area options would expose the secret as plain text, which of course is not desirable.
 
@@ -557,6 +568,8 @@ In this exercise, you will create a release pipeline in Azure DevOps that perfor
 
       > Note that the **Deployment mode** is set to "Incremental", which handles deployments as incremental updates to the resource group. It leaves resources unchanged that exist in the resource group but are not specified in the template. We will keep this default value.
 
+### Task 4: Deploy the ARM Template
+
 1.   Let's take a break from this activity to save and validate our work in progress. But before we do that, let's give our release pipeline a more meaningful name. Click on the existing "New release pipeline" name to begin editing it. Change the name to "TailspinToys Release".
 
      <img src="images/stepbystep/media/image92a.png" alt="On the Release screen, TailspinToys Release name is highlighted." title="Release pipeline name change" width="500">
@@ -567,9 +580,9 @@ In this exercise, you will create a release pipeline in Azure DevOps that perfor
 
       <img src="images/stepbystep/media/snp-image14.png" alt="On the TailspinToys Release screen, Create a release is highlighted." title="Create a release" width="300">
 
-1.    Although we are not ready to deploy our application yet, we'll need to select an Artifact Version. Select the version created by the build pipeline. Then click the "Create" button.
+1.    Click the "Create" button.
 
-      <img src="images/stepbystep/media/snp-image13.png" alt="On the Variables configuration panel, the SQL password Variable input is highlighted." title="SQL password Variable" width="500">
+      <img src="images/stepbystep/media/snp-image22.png" alt="On the Create a new release panel, the Create button is highlighted." title="Create a new release" width="500">
 
 1.    An alert will appear on the screen like the image shown below.
 
@@ -583,9 +596,23 @@ In this exercise, you will create a release pipeline in Azure DevOps that perfor
 
       <img src="images/stepbystep/media/snp-image17.png" alt="In Azure Portal, the TailspinToys-Dev resource group is displayed." title="TailspinToys-Dev Resource group" width="500">
 
-1.    Now, let's complete the final tasks needed to wrap up our release pipeline. Click on the **TailspinToys Release** pipeline and click the **Edit**  button. Then click on the **Tasks** tab.
+### Task 5: Add an artifact
+
+1.    Now, let's complete the final tasks needed to wrap up our release pipeline. Click on the **TailspinToys Release** pipeline and click the **Edit**  button.
 
       <img src="images/stepbystep/media/snp-image19.png" alt="On the Release screen, the TailspinToys Release is highlighted." title="TailspinToys Release" width="500">
+
+1.  A release consists of a collection of artifacts in your CD/CD process. An artifact is any deployable component of your application. When authoring a release pipeline, you link the appropriate artifact sources to your release pipeline. In this step, we will connect the artifacts from our previously created build pipeline to this newly created release pipeline. Click on the "+ Add" button next to "Artifacts" or the "+ Add an artifact" icon inside the "Artifacts" box. Both buttons perform the same action.
+
+    ![+ Add and + Add an artifact are highlighted in this step.](images/stepbystep/media/image87.png "New release pipeline")
+
+1.  The Add an artifact panel will display several configurations for linking to an artifact. In the **Source (build pipeline)** dropdown list, select **TailspinToys**. The panel fields will adjust to show additional details based on your selection. The default values will produce a new release when future builds successfully complete. Click the **Add** button.
+
+    <img src="images/stepbystep/media/image88.png" alt="On the Add an artifact screen, TailspinToys is highlighted in the Source (build pipeline) field, and the Add button is highlighted at the bottom." title="Add an artifact" width="500">
+
+### Task 6: Add App Service Deploy task
+
+1. Click on the **Tasks** tab.
 
       <img src="images/stepbystep/media/snp-image18.png" alt="On the TailspinToys Release screen, the Tasks tab is highlighted." title="Tasks tab" width="500">
 
@@ -613,53 +640,55 @@ In this exercise, you will create a release pipeline in Azure DevOps that perfor
 
      <img src="images/stepbystep/media/snp-image20.png" alt="A screen that shows choosing Azure App Service deployment." title="Add a task" width="500">
 
-1. This opens the "Add tasks" panel. Enter **App Service Manage** into the search box and press **Enter**. Then select the **Azure App Service Manage** task from the search results and click the **Add** button.
+1.  This opens the "Add tasks" panel. Enter **App Service Manage** into the search box and press **Enter**. Then select the **Azure App Service Manage** task from the search results and click the **Add** button.
 
     <img src="images/stepbystep/media/image90.png" alt="On the panel, App Service Manage is entered into the search textbox and Azure App Service Manage is highlighted." title="Add tasks" width="500">
 
-28. After adding the new task, we now have two tasks for the dev stage. The new task now needs to be configured. Click on the **Swap Slots:** task to open the task configuration panel.
+1. After adding the new task, we now have two tasks for the dev stage. The new task now needs to be configured. Click on the **Swap Slots:** task to open the task configuration panel.
 
     <img src="images/stepbystep/media/image91.png" alt="On the screen, the Swap Slots task is highlighted." title="Task list"" width="500">	
 
-29. In the **Azure App Service Manage** task panel there are a few configurations we need to set. First, locate the **Azure subscription** field and select the same subscription used in the **Deploy Azure App Service** task.
+1. In the **Azure App Service Manage** task panel there are a few configurations we need to set. First, locate the **Azure subscription** field and select the same subscription used in the **Deploy Azure App Service** task.
 
-30. Locate the **App Service name** field, select the item that begins with "TailspinToysWeb-dev-" just like in the **Deploy Azure App Service** task. In the **Resource Group** field, select "TailspinToys-dev". In the **Source Slot** field, select "staging".
+1. Locate the **App Service name** field, select the item that begins with "TailspinToysWeb-dev-" just like in the **Deploy Azure App Service** task. In the **Resource Group** field, select "TailspinToys-dev". In the **Source Slot** field, select "staging".
 
     <img src="images/stepbystep/media/image92.png" alt="On the panel, App Service name, Resource group, and Source Slot are all highlighted." title="Swap Slots task configuration" width="500">	
 
-31. Click the **Save** button at the top of the screen and confirm by clicking the **OK** button.
+1. Click the **Save** button at the top of the screen and confirm by clicking the **OK** button.
 
-32. Congratulations! You have just created your first release pipeline.
+1. Congratulations! You have just created your first release pipeline.
 
-### Task 2: Add test and production environments to release pipeline
+### Task 7: Add test and production environments to release pipeline
 
 1.  Move your mouse over the dev stage and a click the **Clone** button to create a copy of the tasks from the dev stage. We will use the same steps to deploy to test with a few configuration changes.
 
     <img src="images/stepbystep/media/image96.png" alt="On the screen, the Clone button is highlighted." title="Copy the deployment tasks" width="500">	
 
-2.  Click on the newly created stage titled "Copy of dev" to bring up the stage configuration panel.
+1.  Click on the newly created stage titled "Copy of dev" to bring up the stage configuration panel.
 
-3.  Change the "Stage name" to **test** and then close the panel.
+1.  Change the "Stage name" to **test** and then close the panel.
 
     <img src="images/stepbystep/media/image96a.png" alt="On the panel, Stage name is highlighted." title="Stage configuration panel" width="500">	
 
-4.  Now, we will begin modifying the configuration specifics for the test stage. Now the challenge is for you to do this on your own. To be fair, here is a hint...The test stage settings are the same as configured for the dev stage because we cloned the dev stage to create the test stage. Consider what values need to be updated for the tasks and variables.
+1.  Now, we will begin modifying the configuration specifics for the test stage. Now the challenge is for you to do this on your own. To be fair, here is a hint...The test stage settings are the same as configured for the dev stage because we cloned the dev stage to create the test stage. Consider what values need to be updated for the tasks and variables.
 
-5. Once you have successfully configured and the test stage, replicate for the production stage.
+1. Once you have successfully configured and the test stage, replicate for the production stage.
 
-6. The final release pipeline should look like the screen shot below:
+1. The final release pipeline should look like the screen shot below:
 
     ![On the screen, all three stages are shown: dev, test, and production.](images/stepbystep/media/image100.png "The final release pipeline")
 
-13. Now you will enable the continuous deployment trigger, so the release process automatically begins as soon as a build successfully completes. To do this, click on the lightning bolt icon in the Artifacts window.
+### Task 8: Enable continuous deployment trigger
 
-14. This will bring up the Continuous deployment trigger panel. Change the setting to "Enabled".
+1. Now you will enable the continuous deployment trigger, so the release process automatically begins as soon as a build successfully completes. To do this, click on the lightning bolt icon in the Artifacts window.
+
+1. This will bring up the Continuous deployment trigger panel. Change the setting to "Enabled".
 
     ![On the screen, Continuous deployment artifact lightning bolt is highlighted and the Continuous deployment trigger is enabled.](images/stepbystep/media/image101.png "Enable the continuous deployment trigger")
 
-15. Click Save, and confirm your changes by clicking "OK". Then, close the panel.
+1. Click Save, and confirm your changes by clicking "OK". Then, close the panel.
 
-16. Congratulations! You have completed the creation of a release pipeline with three stages.
+1. Congratulations! You have completed the creation of a release pipeline with three stages.
 
 ## Exercise 5: Trigger a build and release
 
