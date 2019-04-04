@@ -647,7 +647,7 @@ In this exercise, you will create a release pipeline in Azure DevOps that perfor
 
 1. After adding the new task, we now have two tasks for the dev stage. The new task now needs to be configured. Click on the **Swap Slots:** task to open the task configuration panel.
 
-    <img src="images/stepbystep/media/image91.png" alt="On the screen, the Swap Slots task is highlighted." title="Task list"" width="500">	
+    <img src="images/stepbystep/media/image91.png" alt="On the screen, the Swap Slots task is highlighted." title="Task list" width="500">
 
 1. In the **Azure App Service Manage** task panel there are a few configurations we need to set. First, locate the **Azure subscription** field and select the same subscription used in the **Deploy Azure App Service** task.
 
