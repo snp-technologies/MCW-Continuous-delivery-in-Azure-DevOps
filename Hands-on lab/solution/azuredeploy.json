@@ -1,0 +1,414 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "environment": {
+      "type": "string",
+      "defaultValue": "dev",
+      "allowedValues": [
+        "dev",
+        "test",
+        "production"
+      ]
+    },
+    "tailspinsqlAdminLogin": {
+      "type": "string",
+      "minLength": 1
+    },
+    "tailspinsqlAdminLoginPassword": {
+      "type": "securestring"
+    },
+    "TailspinDataName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "TailspinDataCollation": {
+      "type": "string",
+      "minLength": 1,
+      "defaultValue": "SQL_Latin1_General_CP1_CI_AS"
+    },
+    "TailspinDataEdition": {
+      "type": "string",
+      "defaultValue": "Basic",
+      "allowedValues": [
+        "Basic",
+        "Standard",
+        "Premium"
+      ]
+    },
+    "TailspinDataRequestedServiceObjectiveName": {
+      "type": "string",
+      "defaultValue": "Basic",
+      "allowedValues": [
+        "Basic",
+        "S0",
+        "S1",
+        "S2",
+        "P1",
+        "P2",
+        "P3"
+      ],
+      "metadata": {
+        "description": "Describes the performance level for Edition"
+      }
+    },
+    "TailspinToysHostingPlanName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "TailspinToysHostingPlanSkuName": {
+      "type": "string",
+      "defaultValue": "F1",
+      "allowedValues": [
+        "F1",
+        "D1",
+        "B1",
+        "B2",
+        "B3",
+        "S1",
+        "S2",
+        "S3",
+        "P1",
+        "P2",
+        "P3",
+        "P4"
+      ],
+      "metadata": {
+        "description": "Describes plan's pricing tier and capacity. Check details at https://azure.microsoft.com/en-us/pricing/details/app-service/"
+      }
+    }
+  },
+  "variables": {
+    "tailspinsqlName": "[concat('tailspinsql', uniqueString(resourceGroup().id))]",
+    "TailspinToysWebName": "[concat('TailspinToysWeb', '-', parameters('environment'), '-', uniqueString(resourceGroup().id))]"},
+  "resources": [
+    {
+      "name": "[variables('tailspinsqlName')]",
+      "type": "Microsoft.Sql/servers",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2014-04-01-preview",
+      "dependsOn": [ ],
+      "tags": {
+        "displayName": "tailspinsql"
+      },
+      "properties": {
+        "administratorLogin": "[parameters('tailspinsqlAdminLogin')]",
+        "administratorLoginPassword": "[parameters('tailspinsqlAdminLoginPassword')]"
+      },
+      "resources": [
+        {
+          "name": "AllowAllWindowsAzureIps",
+          "type": "firewallrules",
+          "location": "[resourceGroup().location]",
+          "apiVersion": "2014-04-01-preview",
+          "dependsOn": [
+            "[resourceId('Microsoft.Sql/servers', variables('tailspinsqlName'))]"
+          ],
+          "properties": {
+            "startIpAddress": "0.0.0.0",
+            "endIpAddress": "0.0.0.0"
+          }
+        },
+        {
+          "name": "[parameters('TailspinDataName')]",
+          "type": "databases",
+          "location": "[resourceGroup().location]",
+          "apiVersion": "2014-04-01-preview",
+          "dependsOn": [
+            "[resourceId('Microsoft.Sql/servers', variables('tailspinsqlName'))]"
+          ],
+          "tags": {
+            "displayName": "TailspinData"
+          },
+          "properties": {
+            "collation": "[parameters('TailspinDataCollation')]",
+            "edition": "[parameters('TailspinDataEdition')]",
+            "maxSizeBytes": "1073741824",
+            "requestedServiceObjectiveName": "[parameters('TailspinDataRequestedServiceObjectiveName')]"
+          }
+        }
+      ]
+    },
+    {
+      "name": "[parameters('TailspinToysHostingPlanName')]",
+      "type": "Microsoft.Web/serverfarms",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2015-08-01",
+      "sku": {
+        "name": "[parameters('TailspinToysHostingPlanSkuName')]"
+      },
+      "dependsOn": [ ],
+      "tags": {
+        "displayName": "TailspinToysHostingPlan"
+      },
+      "properties": {
+        "name": "[parameters('TailspinToysHostingPlanName')]",
+        "numberOfWorkers": 1
+      }
+    },
+    {
+      "name": "[variables('TailspinToysWebName')]",
+      "type": "Microsoft.Web/sites",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2015-08-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', parameters('TailspinToysHostingPlanName'))]"
+      ],
+      "tags": {
+        "[concat('hidden-related:', resourceId('Microsoft.Web/serverfarms', parameters('TailspinToysHostingPlanName')))]": "Resource",
+        "displayName": "TailspinToysWeb"
+      },
+      "properties": {
+        "name": "[variables('TailspinToysWebName')]",
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('TailspinToysHostingPlanName'))]"
+      },
+      "resources": [
+        {
+          "apiVersion": "2015-08-01",
+          "name": "Microsoft.ApplicationInsights.AzureWebSites",
+          "type": "siteextensions",
+          "tags": {
+            "displayName": "Application Insights Extension"
+          },
+          "dependsOn": [
+            "[resourceId('Microsoft.Web/Sites/', variables('TailspinToysWebName'))]",
+            "[resourceId('Microsoft.Insights/components/', 'TailspinToysWeb')]"
+          ],
+          "properties": {
+          }
+        },
+        {
+          "apiVersion": "2015-08-01",
+          "name": "staging",
+          "type": "slots",
+          "tags": {
+            "displayName": "Deployment Slot: staging"
+          },
+          "location": "[resourceGroup().location]",
+          "dependsOn": [
+            "[resourceId('Microsoft.Web/Sites/', variables('TailspinToysWebName'))]"
+          ],
+          "properties": {
+          },
+          "resources": []
+        }
+      ]
+    },
+    {
+      "name": "[concat(parameters('TailspinToysHostingPlanName'), '-', resourceGroup().name)]",
+      "type": "Microsoft.Insights/autoscalesettings",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2014-04-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', parameters('TailspinToysHostingPlanName'))]"
+      ],
+      "tags": {
+        "[concat('hidden-link:', resourceId('Microsoft.Web/serverfarms', parameters('TailspinToysHostingPlanName')))]": "Resource",
+        "displayName": "TailspinToysWeb AutoScale"
+      },
+      "properties": {
+        "name": "[concat(parameters('TailspinToysHostingPlanName'), '-', resourceGroup().name)]",
+        "profiles": [
+          {
+            "name": "Default",
+            "capacity": {
+              "minimum": 1,
+              "maximum": 2,
+              "default": 1
+            },
+            "rules": [
+              {
+                "metricTrigger": {
+                  "metricName": "CpuPercentage",
+                  "metricResourceUri": "[resourceId('Microsoft.Web/serverfarms', parameters('TailspinToysHostingPlanName'))]",
+                  "timeGrain": "PT1M",
+                  "statistic": "Average",
+                  "timeWindow": "PT10M",
+                  "timeAggregation": "Average",
+                  "operator": "GreaterThan",
+                  "threshold": 80
+                },
+                "scaleAction": {
+                  "direction": "Increase",
+                  "type": "ChangeCount",
+                  "value": 1,
+                  "cooldown": "PT10M"
+                }
+              },
+              {
+                "metricTrigger": {
+                  "metricName": "CpuPercentage",
+                  "metricResourceUri": "[resourceId('Microsoft.Web/serverfarms', parameters('TailspinToysHostingPlanName'))]",
+                  "timeGrain": "PT1M",
+                  "statistic": "Average",
+                  "timeWindow": "PT1H",
+                  "timeAggregation": "Average",
+                  "operator": "LessThan",
+                  "threshold": 60
+                },
+                "scaleAction": {
+                  "direction": "Decrease",
+                  "type": "ChangeCount",
+                  "value": 1,
+                  "cooldown": "PT1H"
+                }
+              }
+            ]
+          }
+        ],
+        "enabled": true,
+        "targetResourceUri": "[resourceId('Microsoft.Web/serverfarms', parameters('TailspinToysHostingPlanName'))]"
+      }
+    },
+    {
+      "name": "[concat('CPUHigh ', parameters('TailspinToysHostingPlanName'))]",
+      "type": "Microsoft.Insights/alertrules",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2014-04-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', parameters('TailspinToysHostingPlanName'))]"
+      ],
+      "tags": {
+        "[concat('hidden-link:', resourceId('Microsoft.Web/serverfarms', parameters('TailspinToysHostingPlanName')))]": "Resource",
+        "displayName": "CPUHigh TailspinToysWeb"
+      },
+      "properties": {
+        "name": "[concat('CPUHigh ', parameters('TailspinToysHostingPlanName'))]",
+        "description": "[concat('The average CPU is high across all the instances of ', parameters('TailspinToysHostingPlanName'))]",
+        "isEnabled": false,
+        "condition": {
+          "odata.type": "Microsoft.Azure.Management.Insights.Models.ThresholdRuleCondition",
+          "dataSource": {
+            "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleMetricDataSource",
+            "resourceUri": "[resourceId('Microsoft.Web/serverfarms', parameters('TailspinToysHostingPlanName'))]",
+            "metricName": "CpuPercentage"
+          },
+          "operator": "GreaterThan",
+          "threshold": 90,
+          "windowSize": "PT15M"
+        },
+        "action": {
+          "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleEmailAction",
+          "sendToServiceOwners": true,
+          "customEmails": [ ]
+        }
+      }
+    },
+    {
+      "name": "[concat('LongHttpQueue ', parameters('TailspinToysHostingPlanName'))]",
+      "type": "Microsoft.Insights/alertrules",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2014-04-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', parameters('TailspinToysHostingPlanName'))]"
+      ],
+      "tags": {
+        "[concat('hidden-link:', resourceId('Microsoft.Web/serverfarms', parameters('TailspinToysHostingPlanName')))]": "Resource",
+        "displayName": "LongHttpQueue TailspinToysWeb"
+      },
+      "properties": {
+        "name": "[concat('LongHttpQueue ', parameters('TailspinToysHostingPlanName'))]",
+        "description": "[concat('The HTTP queue for the instances of ', parameters('TailspinToysHostingPlanName'), ' has a large number of pending requests.')]",
+        "isEnabled": false,
+        "condition": {
+          "odata.type": "Microsoft.Azure.Management.Insights.Models.ThresholdRuleCondition",
+          "dataSource": {
+            "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleMetricDataSource",
+            "resourceUri": "[resourceId('Microsoft.Web/serverfarms', parameters('TailspinToysHostingPlanName'))]",
+            "metricName": "HttpQueueLength"
+          },
+          "operator": "GreaterThan",
+          "threshold": 100,
+          "windowSize": "PT5M"
+        },
+        "action": {
+          "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleEmailAction",
+          "sendToServiceOwners": true,
+          "customEmails": [ ]
+        }
+      }
+    },
+    {
+      "name": "[concat('ServerErrors ', 'TailspinToysWeb')]",
+      "type": "Microsoft.Insights/alertrules",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2014-04-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', variables('TailspinToysWebName'))]"
+      ],
+      "tags": {
+        "[concat('hidden-link:', resourceId('Microsoft.Web/sites', variables('TailspinToysWebName')))]": "Resource",
+        "displayName": "ServerErrors TailspinToysWeb"
+      },
+      "properties": {
+        "name": "[concat('ServerErrors ', variables('TailspinToysWebName'))]",
+        "description": "[concat(variables('TailspinToysWebName'), ' has some server errors, status code 5xx.')]",
+        "isEnabled": false,
+        "condition": {
+          "odata.type": "Microsoft.Azure.Management.Insights.Models.ThresholdRuleCondition",
+          "dataSource": {
+            "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleMetricDataSource",
+            "resourceUri": "[resourceId('Microsoft.Web/sites', variables('TailspinToysWebName'))]",
+            "metricName": "Http5xx"
+          },
+          "operator": "GreaterThan",
+          "threshold": 0,
+          "windowSize": "PT5M"
+        },
+        "action": {
+          "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleEmailAction",
+          "sendToServiceOwners": true,
+          "customEmails": [ ]
+        }
+      }
+    },
+    {
+      "name": "[concat('ForbiddenRequests ', 'TailspinToysWeb')]",
+      "type": "Microsoft.Insights/alertrules",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2014-04-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', variables('TailspinToysWebName'))]"
+      ],
+      "tags": {
+        "displayName": "ForbiddenRequests TailspinToysWeb"
+      },
+      "properties": {
+        "name": "[concat('ForbiddenRequests ', variables('TailspinToysWebName'))]",
+        "description": "[concat(variables('TailspinToysWebName'), ' has some requests that are forbidden, status code 403.')]",
+        "isEnabled": false,
+        "condition": {
+          "odata.type": "Microsoft.Azure.Management.Insights.Models.ThresholdRuleCondition",
+          "dataSource": {
+            "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleMetricDataSource",
+            "resourceUri": "[resourceId('Microsoft.Web/sites', variables('TailspinToysWebName'))]",
+            "metricName": "Http403"
+          },
+          "operator": "GreaterThan",
+          "threshold": 0,
+          "windowSize": "PT5M"
+        },
+        "action": {
+          "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleEmailAction",
+          "sendToServiceOwners": true,
+          "customEmails": [ ]
+        }
+      }
+    },
+    {
+      "name": "TailspinToysWeb",
+      "type": "Microsoft.Insights/components",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2014-04-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', variables('TailspinToysWebName'))]"
+      ],
+      "tags": {
+        "displayName": "Component TailspinToysWeb"
+      },
+      "properties": {
+        "applicationId": "[resourceId('Microsoft.Web/sites', variables('TailspinToysWebName'))]"
+      }
+    }],
+  "outputs": {}
+}
