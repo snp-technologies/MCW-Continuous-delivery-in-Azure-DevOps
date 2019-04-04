@@ -542,7 +542,7 @@ In this exercise, you will create a release pipeline in Azure DevOps that perfor
 - Lastly, we need to enter template parameter values that are environment specific and not included in the **azuredeploy.parameters.json** file. In the **Override template parameters** text area, paste the following content:
 
     ```
-    -environment dev -tailspinsqlAdminLoginPassword $tailspinsqlAdminLoginPassword)
+    -environment dev -tailspinsqlAdminLoginPassword $(tailspinsqlAdminLoginPassword)
     ```
     <img src="images/stepbystep/media/snp-image12.png" alt="On the Azure Deployment configuration panel, Override template parameters is highlighted." title="Override template parameters" width="500">
 
