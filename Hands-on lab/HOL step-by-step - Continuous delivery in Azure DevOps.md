@@ -47,9 +47,9 @@ Microsoft and the trademarks listed at https://www.microsoft.com/en-us/legal/int
     - [Task 1: Create a build pipeline](#task-1-create-a-build-pipeline)
   - [Exercise 4: Create Azure DevOps release pipeline](#exercise-4-create-azure-devops-release-pipeline)
     - [Task 1: Create a release definition](#task-1-create-a-release-definition)
-    - [Task 2: Add Azure Deployment task](#task-2-add-azure-deployment-task)
-    - [Task 3: Add a SQL password variable](#task-3-add-a-sql-password-variable)
-    - [Task 4: Add an artifact](#task-4-add-an-artifact)
+    - [Task 2: Add an artifact](#task-2-add-an-artifact)
+    - [Task 3: Add Azure Deployment task](#task-3-add-azure-deployment-task)
+    - [Task 4: Add a SQL password variable](#task-4-add-a-sql-password-variable)
     - [Task 5: Deploy the ARM Template](#task-5-deploy-the-arm-template)
     - [Task 6: Add App Service Deploy task](#task-6-add-app-service-deploy-task)
     - [Task 7: Add test and production environments to release pipeline](#task-7-add-test-and-production-environments-to-release-pipeline)
@@ -497,7 +497,17 @@ In this exercise, you will create a release pipeline in Azure DevOps that perfor
 
     ![A screen that shows Stage details. The Stage name is highlighted. The X is also highlighted.](images/stepbystep/media/image86.png "Stage")
 
-### Task 2: Add Azure Deployment task
+### Task 2: Add an artifact
+
+1.  A release consists of a collection of artifacts in your CD/CD process. An artifact is any deployable component of your application. When authoring a release pipeline, you link the appropriate artifact sources to your release pipeline. In this step, we will connect the artifacts from our previously created build pipeline to this newly created release pipeline. Click on the "+ Add" button next to "Artifacts" or the "+ Add an artifact" icon inside the "Artifacts" box. Both buttons perform the same action.
+
+    ![+ Add and + Add an artifact are highlighted in this step.](images/stepbystep/media/image87.png "New release pipeline")
+
+1.  The Add an artifact panel will display several configurations for linking to an artifact. In the **Source (build pipeline)** dropdown list, select **TailspinToys**. The panel fields will adjust to show additional details based on your selection. The default values will produce a new release when future builds successfully complete. Click the **Add** button.
+
+    <img src="images/stepbystep/media/image88.png" alt="On the Add an artifact screen, TailspinToys is highlighted in the Source (build pipeline) field, and the Add button is highlighted at the bottom." title="Add an artifact" width="500">
+
+### Task 3: Add Azure Deployment task
 
 1.  Now, it is time to begin configuring specific tasks to perform our deployment during the dev stage. To navigate to the task editor, click on the **Task** menu item.
 
@@ -548,7 +558,7 @@ In this exercise, you will create a release pipeline in Azure DevOps that perfor
 
     > Note that the **Deployment mode** is set to "Incremental", which handles deployments as incremental updates to the resource group. It leaves resources unchanged that exist in the resource group but are not specified in the template. We will keep this default value.
 
-### Task 3: Add a SQL password variable
+### Task 4: Add a SQL password variable
 
 1.   You may have noticed that we have not yet set a value for our SQL admin password. Since this is a secret, we want to take more care to protect the information. Using the **azuredeploy.parameters.json** or **Override template parameters** text area options would expose the secret as plain text, which of course is not desirable.
 
@@ -567,20 +577,6 @@ In this exercise, you will create a release pipeline in Azure DevOps that perfor
       Click the lock symbol to the right of the password value to change the variable type from plain text to secret.
 
       <img src="images/stepbystep/media/snp-image11.png" alt="On the Variables configuration panel, the SQL password Variable input is highlighted." title="SQL password Variable" width="600">
-
-### Task 4: Add an artifact
-
-1.    Click on the **TailspinToys Release** pipeline and click the **Edit**  button.
-
-      <img src="images/stepbystep/media/snp-image19.png" alt="On the Release screen, the TailspinToys Release is highlighted." title="TailspinToys Release" width="600">
-
-1.  A release consists of a collection of artifacts in your CD/CD process. An artifact is any deployable component of your application. When authoring a release pipeline, you link the appropriate artifact sources to your release pipeline. In this step, we will connect the artifacts from our previously created build pipeline to this newly created release pipeline. Click on the "+ Add" button next to "Artifacts" or the "+ Add an artifact" icon inside the "Artifacts" box. Both buttons perform the same action.
-
-    ![+ Add and + Add an artifact are highlighted in this step.](images/stepbystep/media/image87.png "New release pipeline")
-
-1.  The Add an artifact panel will display several configurations for linking to an artifact. In the **Source (build pipeline)** dropdown list, select **TailspinToys**. The panel fields will adjust to show additional details based on your selection. The default values will produce a new release when future builds successfully complete. Click the **Add** button.
-
-    <img src="images/stepbystep/media/image88.png" alt="On the Add an artifact screen, TailspinToys is highlighted in the Source (build pipeline) field, and the Add button is highlighted at the bottom." title="Add an artifact" width="500">
 
 ### Task 5: Deploy the ARM Template
 
